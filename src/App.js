@@ -7,7 +7,56 @@ import TrendsArea from './components/TrendsArea'
 import Tweet from './components/Tweet'
 
 class App extends Component {
+    constructor(){
+        super()
+
+        this.state = {
+            novoTweet: '',
+            tweets: []
+        }
+
+        this.alteraEstado = this.alteraEstado.bind(this)//so quando usa setState quando tem que usar o this
+    }
+
+    hasTwittes = () => {
+        let retorno = this.state.tweets.map( (tweet, idx) => {
+            return <Tweet conteudo={tweet} key={`Chave_${idx}`} />})
+
+        if(this.state.tweets.length === 0){
+            retorno =  <article>
+                <p>Você ainda não efetuou nenhum twitte, que tal twitter algo!</p>
+            </article>
+        }
+
+        return retorno;
+    }
+
+    ehValido(){
+        return this.state.novoTweet.length > 0 && this.state.novoTweet.length <= 140
+    }
+
+    alteraEstado(evento) {
+        console.log('Entramos no alterarEstado')
+        const novoTexto = evento.target.value
+        console.log(novoTexto)
+
+        console.log(this.ehValido())
+
+        this.setState({
+            novoTweet: novoTexto
+        })
+    }
+
+    adicionaTweet = (evento) => {
+        evento.preventDefault();
+        this.setState({
+            tweets: [this.state.novoTweet, ...this.state.tweets], //adiciona ao que já existe
+            novoTweet: ''
+        });
+    }
+
   render() {
+    console.log(this.state)
     return (
       <Fragment>
         <Cabecalho>
@@ -16,12 +65,14 @@ class App extends Component {
         <div className="container">
             <Dashboard>
                 <Widget>
-                    <form className="novoTweet">
+                    <form onSubmit={this.adicionaTweet} className="novoTweet">
                         <div className="novoTweet__editorArea">
-                            <span className="novoTweet__status">0/140</span>
-                            <textarea className="novoTweet__editor" placeholder="O que está acontecendo?"></textarea>
+                            <span className={`novoTweet__status ${this.state.novoTweet.length > 140? 'novoTweet__status--invalido': ''}`}>
+                                {this.state.novoTweet.length}/140
+                            </span>
+                            <textarea value={this.state.novoTweet} onChange={this.alteraEstado} className="novoTweet__editor" placeholder="O que está acontecendo?"></textarea>
                         </div>
-                        <button type="submit" className="novoTweet__envia">Tweetar</button>
+                        <button disabled={!this.ehValido()} type="submit" className="novoTweet__envia">Tweetar</button>
                     </form>
                 </Widget>
                 <Widget>
@@ -31,7 +82,9 @@ class App extends Component {
             <Dashboard posicao="centro">
                 <Widget>
                     <div className="tweetsArea">
-                        <Tweet />
+                        {
+                            this.hasTwittes()
+                        }
                     </div>
                 </Widget>
             </Dashboard>
