@@ -17,7 +17,6 @@ import "./assets/css/novoTweet.css";
 // import './index.css';
 
 import * as serviceWorker from "./serviceWorker";
-import HomePage from "./pages/HomePage";
 
 ReactDOM.render(<BrowserRouter>
         <Roteamento />

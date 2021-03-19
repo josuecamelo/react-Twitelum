@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
+
 import Cabecalho from '../../components/Cabecalho'
 import Widget from '../../components/Widget'
+
 
 import './loginPage.css'
 
