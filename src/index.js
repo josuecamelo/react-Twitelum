@@ -17,12 +17,10 @@ import Roteamento from "./routes";
 import { BrowserRouter } from "react-router-dom";
 import { NotificacaoContextProvider } from "./contexts/NotificacaoContext";
 
-
-
 ReactDOM.render(
     <NotificacaoContextProvider>
         <BrowserRouter>
-        <Roteamento />
+            <Roteamento />
         </BrowserRouter>
     </NotificacaoContextProvider>,
     document.getElementById("root")
