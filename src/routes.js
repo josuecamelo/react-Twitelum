@@ -6,6 +6,8 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
 import { Redirect } from 'react-router-dom'
+import { NotFoundPage } from "./pages/NotFoundPage";
+
 
 class PrivateRoute extends Component {
     estaAutenticado = () => {
@@ -32,6 +34,7 @@ class Roteamento extends Component {
             <Switch>
                 <PrivateRoute path="/" component={HomePage} exact />
                 <Route path="/login" component={LoginPage} />
+                <Route component={NotFoundPage} />
             </Switch>
         );
     }
