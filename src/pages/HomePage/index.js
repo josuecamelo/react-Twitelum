@@ -18,9 +18,19 @@ class HomePage extends Component {
         this.alteraEstado = this.alteraEstado.bind(this)//so quando usa setState quando tem que usar o this
     }
 
+    componentDidMount() {
+        fetch(`https://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+        .then(response => response.json())
+        .then((tweets) => {
+            this.setState({
+                tweets
+            })
+        })
+    }
+
     hasTwittes = () => {
-        let retorno = this.state.tweets.map( (tweet, idx) => {
-            return <Tweet texto={tweet.conteudo} usuario={tweet.usuario} conteudo={tweet} key={`Chave_${idx}`} />})
+        let retorno = this.state.tweets.map( (tweet) => {
+            return <Tweet conteudo={tweet.conteudo} usuario={tweet.usuario} key={tweet._id} />})
 
         if(this.state.tweets.length === 0){
             retorno =  <article>
@@ -76,6 +86,7 @@ class HomePage extends Component {
             })
         }
     }
+    
 
   render() {
     console.log(this.state)
