@@ -20,7 +20,7 @@ class HomePage extends Component {
 
     hasTwittes = () => {
         let retorno = this.state.tweets.map( (tweet, idx) => {
-            return <Tweet conteudo={tweet} key={`Chave_${idx}`} />})
+            return <Tweet texto={tweet.conteudo} usuario={tweet.usuario} conteudo={tweet} key={`Chave_${idx}`} />})
 
         if(this.state.tweets.length === 0){
             retorno =  <article>
@@ -47,12 +47,34 @@ class HomePage extends Component {
         })
     }
 
-    adicionaTweet = (evento) => {
+    /*adicionaTweet = (evento) => {
         evento.preventDefault();
         this.setState({
             tweets: [this.state.novoTweet, ...this.state.tweets], //adiciona ao que já existe
             novoTweet: ''
         });
+    }*/
+
+    adicionaTweet = (infosDoEvento) => {
+        infosDoEvento.preventDefault()
+        if(this.state.novoTweet.length > 0) {
+            fetch(`https://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+                method: 'POST',
+                headers: {
+                'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ conteudo: this.state.novoTweet })
+            })
+            .then((respostaDoServer) => {
+                return respostaDoServer.json()
+            })
+            .then((tweetVindoDoServidor) => {
+                console.log(tweetVindoDoServidor)
+                this.setState({
+                    tweets: [tweetVindoDoServidor, ...this.state.tweets]
+                })
+            })
+        }
     }
 
   render() {
