@@ -5,6 +5,7 @@ import Dashboard from '../../components/Dashboard'
 import Widget from '../../components/Widget'
 import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
+import Helmet from 'react-helmet'
 
 class HomePage extends Component {
     constructor(){
@@ -30,7 +31,17 @@ class HomePage extends Component {
 
     hasTwittes = () => {
         let retorno = this.state.tweets.map( (tweet) => {
-            return <Tweet conteudo={tweet.conteudo} usuario={tweet.usuario} key={tweet._id} />})
+            //return <Tweet conteudo={tweet.conteudo} usuario={tweet.usuario} key={tweet._id} />})
+            return <Tweet
+            key={tweet._id}
+            id={tweet._id}
+            texto={tweet.conteudo}
+            usuario={tweet.usuario}
+            likeado={tweet.likeado}
+            totalLikes={tweet.totalLikes}
+            removivel={tweet.removivel}
+            removeHandler={(event) => this.removeTweet(tweet._id)} />
+        })
 
         if(this.state.tweets.length === 0){
             retorno =  <article>
@@ -86,12 +97,30 @@ class HomePage extends Component {
             })
         }
     }
-    
+
+    removeTweet(idTweetQueVaiSerRemovido) {
+        console.log(idTweetQueVaiSerRemovido)
+        fetch(`https://twitelum-api.herokuapp.com/tweets/${idTweetQueVaiSerRemovido}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, { method: 'DELETE',})
+            .then((data) => data.json())
+            .then((response) => {
+            console.log(response)
+            const listaDeTweetsAtualizada = this.state.tweets.filter( (tweet) => tweet._id !== idTweetQueVaiSerRemovido )
+            
+            this.setState({
+                tweets: listaDeTweetsAtualizada
+            })
+        })
+    }
 
   render() {
     console.log(this.state)
     return (
       <Fragment>
+        <Helmet>
+          <title>
+            Twitelum - ({`${this.state.tweets.length}`})
+          </title>
+        </Helmet>
         <Cabecalho>
             <NavMenu usuario="@omariosouto" />
         </Cabecalho>
