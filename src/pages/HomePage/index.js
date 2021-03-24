@@ -125,6 +125,28 @@ class HomePage extends Component {
 
     fechaModal = () => this.setState({ tweetAtivoNoModal: {} });
 
+    renderTweets = (tweets) => {
+        if (tweets.length > 0) {
+          return tweets.map((tweetInfo) => {
+            return <Tweet
+              texto={tweetInfo.conteudo}
+              key={tweetInfo._id}
+              usuario={tweetInfo.usuario}
+              id={tweetInfo._id}
+              likeado={tweetInfo.likeado}
+              totalLikes={tweetInfo.totalLikes}
+              removivel={tweetInfo.removivel}
+              removeHandler={(event) => this.removeTweet(tweetInfo._id)}
+              onClickNaAreaDeConteudo={() => this.abreModal(tweetInfo._id)}
+              likeHandler={() => this.likeHandler(tweetInfo._id)}
+            />
+          })
+        }
+        else {
+          return <h3>Crie um novo tweet!</h3>
+        }
+      }
+
   render() {
     console.log(this.state)
     return (
