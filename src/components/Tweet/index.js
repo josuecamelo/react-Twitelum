@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './tweet.css'
+import PropTypes from 'prop-types'
 
 class Tweet extends Component {
     constructor(props){
@@ -7,7 +8,7 @@ class Tweet extends Component {
 
         this.state = {
             likeado: props.likeado,
-            totalLikes: props.totalLikes
+            totalLikes: props.totalLikes,
         }
     }
 
@@ -26,6 +27,9 @@ class Tweet extends Component {
             .then( response => console.log(response) );
     }
 
+    handleClickNaAreaDeConteudo = () =>
+        this.props.onClickNaAreaDeConteudo && this.props.onClickNaAreaDeConteudo();
+
     render() {
         console.log(this.props)
         return (
@@ -35,7 +39,8 @@ class Tweet extends Component {
                     <span className="tweet__nomeUsuario">{ this.props.usuario.nome }</span>
                     <a href="/"><span className="tweet__userName">@{ this.props.usuario.login }</span></a>
                 </div>
-                <p className="tweet__conteudo">
+                <p className="tweet__conteudo" onClick={this.handleClickNaAreaDeConteudo}
+                >
                     <span>{this.props.texto}</span>
                 </p>
                 <footer className="tweet__footer">
@@ -62,5 +67,28 @@ class Tweet extends Component {
         )
     }
 }
+
+Tweet.propTypes = {
+    removivel: PropTypes.bool.isRequired,
+    totalLikes: PropTypes.number.isRequired,
+    likeado: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+    usuario: PropTypes.shape({
+        foto: PropTypes.string.isRequired,
+        login: PropTypes.string.isRequired,
+        nome: PropTypes.string.isRequired
+    }),
+    texto: PropTypes.string.isRequired,
+    removeHandler: PropTypes.func.isRequired,
+    onRemove: PropTypes.func,
+    onClickNaAreaDeConteudo: PropTypes.func,
+    likeHandler: PropTypes.func
+};
+
+Tweet.defaultProps = {
+    usuario: {},
+    likeado: false,
+    removivel: false
+};
 
 export default Tweet

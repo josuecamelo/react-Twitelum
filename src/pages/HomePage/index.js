@@ -6,6 +6,7 @@ import Widget from '../../components/Widget'
 import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
 import Helmet from 'react-helmet'
+import { Modal } from "../../components/Modal";
 
 class HomePage extends Component {
     constructor(){
@@ -13,7 +14,8 @@ class HomePage extends Component {
 
         this.state = {
             novoTweet: '',
-            tweets: []
+            tweets: [],
+            tweetAtivoNoModal: {},
         }
 
         this.alteraEstado = this.alteraEstado.bind(this)//so quando usa setState quando tem que usar o this
@@ -40,7 +42,8 @@ class HomePage extends Component {
             likeado={tweet.likeado}
             totalLikes={tweet.totalLikes}
             removivel={tweet.removivel}
-            removeHandler={(event) => this.removeTweet(tweet._id)} />
+            onClickNaAreaDeConteudo={() => this.abreModal(tweet)}
+            removeHandler={() => this.removeTweet(tweet._id)} />
         })
 
         if(this.state.tweets.length === 0){
@@ -103,14 +106,24 @@ class HomePage extends Component {
         fetch(`https://twitelum-api.herokuapp.com/tweets/${idTweetQueVaiSerRemovido}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, { method: 'DELETE',})
             .then((data) => data.json())
             .then((response) => {
-            console.log(response)
-            const listaDeTweetsAtualizada = this.state.tweets.filter( (tweet) => tweet._id !== idTweetQueVaiSerRemovido )
-            
-            this.setState({
-                tweets: listaDeTweetsAtualizada
+                console.log(response)
+                const listaDeTweetsAtualizada = this.state.tweets.filter( (tweet) => tweet._id !== idTweetQueVaiSerRemovido )
+                
+                this.setState({
+                    tweets: listaDeTweetsAtualizada
+                })
             })
-        })
     }
+
+    abreModal = tweetQueVaiProModal => {
+        this.setState({
+            tweetAtivoNoModal: tweetQueVaiProModal
+        },() => {
+            console.log(this.state.tweetAtivoNoModal);
+        });
+    };
+
+    fechaModal = () => this.setState({ tweetAtivoNoModal: {} });
 
   render() {
     console.log(this.state)
@@ -151,6 +164,15 @@ class HomePage extends Component {
                 </Widget>
             </Dashboard>
         </div>
+
+        <Modal
+          isAberto={Boolean(this.state.tweetAtivoNoModal._id)}
+          onFechando={this.fechaModal}
+        >
+          {() => (
+            this.renderTweets([this.state.tweetAtivoNoModal])
+          )}
+        </Modal>
       </Fragment>
     );
   }
