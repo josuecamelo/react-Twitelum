@@ -17,6 +17,9 @@ import Roteamento from "./routes";
 import { BrowserRouter } from "react-router-dom";
 import { NotificacaoContextProvider } from "./contexts/NotificacaoContext";
 
+import './store'
+
+
 ReactDOM.render(
     <NotificacaoContextProvider>
         <BrowserRouter>
