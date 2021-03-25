@@ -8,7 +8,7 @@ import Tweet from '../../components/Tweet'
 import Helmet from 'react-helmet'
 import { Modal } from "../../components/Modal";
 
-import {TweetsService}  from "../../services/TweetsService";
+import {TweetService}  from "../../services/TweetsService";
 import { ReactReduxContext } from "react-redux";
 
 class HomePage extends Component {
@@ -31,7 +31,7 @@ class HomePage extends Component {
 
         store.subscribe(() => {
             this.setState({
-                tweets: window.store.getState()
+                tweets: store.getState()
             })
         })
 
@@ -48,7 +48,7 @@ class HomePage extends Component {
             window.store.dispatch({type: 'CARREGA_TWEETS', tweets})
         })*/
 
-        TweetsService
+        TweetService
             .carrega()
             .then(tweets => {
                 store.dispatch({ type: 'CARREGA_TWEETS', tweets });
