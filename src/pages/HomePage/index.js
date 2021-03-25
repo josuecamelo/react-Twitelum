@@ -8,8 +8,8 @@ import Tweet from '../../components/Tweet'
 import Helmet from 'react-helmet'
 import { Modal } from "../../components/Modal";
 
-import {TweetService}  from "../../services/TweetsService";
 import { ReactReduxContext } from "react-redux";
+import { TweetsThunkActions } from '../../store/ducks/tweets';
 
 class HomePage extends Component {
     static contextType = ReactReduxContext;
@@ -27,33 +27,26 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        const store = this.context.store;
-
+    const store = this.context.store
         store.subscribe(() => {
             this.setState({
-                tweets: store.getState()
+            totalTweets: store.getState().tweets.data.length
             })
         })
-
-
-        //removido pois o redux que ira tratar
-        /*fetch(`https://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
-        .then(response => response.json())
-        .then((tweets) => {
-            //this.setState({
-            //    tweets
-            //})
-
-            //responsabilidade com redux
-            window.store.dispatch({type: 'CARREGA_TWEETS', tweets})
-        })*/
-
-        TweetService
-            .carrega()
-            .then(tweets => {
-                store.dispatch({ type: 'CARREGA_TWEETS', tweets });
-            })
+        store.dispatch(TweetsThunkActions.carregaTweets())
     }
+    
+    adicionaTweet = infosDoEvento => {
+        infosDoEvento.preventDefault();
+        if (this.state.novoTweet.length > 0) {
+            const conteudoDoTweet = this.state.novoTweet;
+            this.context.store
+            .dispatch(TweetsThunkActions.addTweet(conteudoDoTweet))
+            .then(() => {
+                this.setState({ novoTweet: "" });
+            });
+        }
+    };
 
     hasTwittes = () => {
         let retorno = this.state.tweets.map( (tweet) => {
@@ -103,7 +96,7 @@ class HomePage extends Component {
         });
     }*/
 
-    adicionaTweet = (infosDoEvento) => {
+    /*adicionaTweet = (infosDoEvento) => {
         infosDoEvento.preventDefault()
         if(this.state.novoTweet.length > 0) {
             fetch(`https://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
@@ -123,7 +116,7 @@ class HomePage extends Component {
                 })
             })
         }
-    }
+    }*/
 
     removeTweet(idTweetQueVaiSerRemovido) {
         console.log(idTweetQueVaiSerRemovido)

@@ -1,17 +1,13 @@
-import { createStore } from 'redux'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import { tweetsReducer } from './ducks/tweets'
 
-function tweetsReducer(state = [], action = {}) {
-    if(action.type === 'CARREGA_TWEETS') {
-        return action.tweets
-    }
-    
-    return state
-}
 
-const store = createStore(tweetsReducer)
+const store = createStore(
+  combineReducers({
+    tweets: tweetsReducer
+  }),
+  applyMiddleware(thunkMiddleware)
+)
 
-//console.log(`Primeira versão da store:`, store.getState())
-//window.store = store
-
-//segunda versão da store
 export default store
